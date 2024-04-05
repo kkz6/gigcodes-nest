@@ -1,13 +1,17 @@
+import process from 'node:process';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { app, appConfigValidationSchema } from './configs/app.config';
 import Joi from 'joi';
-import { redis, redisConfigValidationSchema } from './configs/redis.config';
-// import { HelperService } from '@common/helpers';
+import {
+  redis,
+  redisConfigValidationSchema,
+  app,
+  appConfigValidationSchema,
+} from './configs';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env',
+      envFilePath: `${process.cwd()}/.env`,
       load: [app, redis],
       cache: true,
       isGlobal: true,
@@ -18,9 +22,6 @@ import { redis, redisConfigValidationSchema } from './configs/redis.config';
       }),
       validationOptions: {
         abortEarly: true,
-        // cache: !HelperService.isProd(),
-        // debug: !HelperService.isProd(),
-        // stack: !HelperService.isProd(),
       },
     }),
   ],

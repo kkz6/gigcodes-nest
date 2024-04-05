@@ -10,8 +10,10 @@ import {
 import { ConfigService } from '@nestjs/config';
 import bodyParser from 'body-parser';
 import { useContainer } from 'class-validator';
+import compression from 'compression';
+import helmet from 'helmet';
 import { LoggerErrorInterceptor } from 'nestjs-pino';
-import { AppUtils } from '@common/helpers';
+import { AppUtils, HelperService } from '@common/helpers';
 import chalk from 'chalk';
 import { I18nValidationExceptionFilter } from 'nestjs-i18n';
 
@@ -42,6 +44,17 @@ async function bootstrap() {
     bodyParser.json({ limit: '10mb' }),
     bodyParser.urlencoded({ limit: '10mb', extended: true }),
   );
+
+  if (!HelperService.isProd()) {
+    app.use(compression());
+    app.use(helmet());
+    app.enableCors({
+      credentials: true,
+      methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+      maxAge: 3600,
+      origin: configService.get('app.allowedOrigins', { infer: true }),
+    });
+  }
 
   app.enableShutdownHooks();
 

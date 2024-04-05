@@ -1,3 +1,4 @@
+import { SharedModule } from './shared/shared.module';
 import {
   MiddlewareConsumer,
   Module,
@@ -8,14 +9,12 @@ import { AppController } from './app.controller';
 import { applyRawBodyOnlyTo } from '@golevelup/nestjs-webhooks';
 import { SWAGGER_API_ENDPOINT } from '@common/constant';
 import { ClearCacheMiddleware, RealIpMiddleware } from '@common/middlewares';
-import { NestConfigModule } from '@lib/config/config.module';
-import { NestCacheModule } from '@lib/cache';
 
 const stripeWebhookPath = 'stripe/webhook';
 const excludedPaths = [stripeWebhookPath, SWAGGER_API_ENDPOINT];
 
 @Module({
-  imports: [NestCacheModule, NestConfigModule],
+  imports: [SharedModule],
   controllers: [AppController],
 })
 export class AppModule implements NestModule {
