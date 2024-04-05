@@ -7,18 +7,21 @@ import {
   redisConfigValidationSchema,
   app,
   appConfigValidationSchema,
+  throttle,
+  throttleConfigValidationSchema,
 } from './configs';
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: `${process.cwd()}/.env`,
-      load: [app, redis],
+      load: [app, redis, throttle],
       cache: true,
       isGlobal: true,
       expandVariables: true,
       validationSchema: Joi.object({
         ...appConfigValidationSchema,
         ...redisConfigValidationSchema,
+        ...throttleConfigValidationSchema,
       }),
       validationOptions: {
         abortEarly: true,
