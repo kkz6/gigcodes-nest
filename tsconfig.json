@@ -1,22 +1,51 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
+    /* Base Options: */
+
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "es2022",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "allowSyntheticDefaultImports": true,
+
+    /* ModuleResolution: */
+
+    "module": "CommonJS",
+    "moduleResolution": "node",
+
+    /* Output: */
+    "outDir": "dist",
+    "sourceMap": true,
+    "jsx": "react",
+    "noEmitOnError": true,
+    "useDefineForClassFields": true,
+    "forceConsistentCasingInFileNames": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "ES2021",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "src",
     "incremental": true,
-    "skipLibCheck": true,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
+
+    /* Prettify */
+    "pretty": true,
+    "newLine": "lf",
+    "removeComments": true,
+    "stripInternal": true,
+
+
+
+    /* Strictness */
+    "strict": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "exactOptionalPropertyTypes": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
+
+    "baseUrl": "src",
     "paths": {
       "@lib/*": [
         "./lib/*"
@@ -37,6 +66,14 @@
         "./generated"
       ]
     },
+    "declaration": true,
+
   },
+  "include": [
+    "test/**/*",
+    "src/**/*",
+    "eslint.config.js"
+  ],
+
   "typeRoots": ["./src/common/@types/typings"]
 }

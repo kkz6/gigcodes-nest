@@ -1,17 +1,5 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-
-@Module({
-  imports: [
-    ConfigModule.forRoot({
-      envFilePath: [`${process.cwd()}/env/.env`],
-      load: [],
-      cache: true,
-      isGlobal: true,
-      expandVariables: true,
-    }),
-  ],
-  providers: [ConfigService],
-  exports: [ConfigService],
-})
-export class NestConfigModule {}
+import type { ConfigType } from '@nestjs/config';
+import { app } from './configs/app.config';
+export interface Config {
+  app: ConfigType<typeof app>;
+}

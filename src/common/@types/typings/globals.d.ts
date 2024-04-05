@@ -12,10 +12,8 @@ declare global {
       i18nLang?: string;
       ips: string[];
     }
-    interface User extends UserEntity {}
   }
 
-  export type I18nTranslations = I18nTranslationTypes;
   export type Configs = ConfigInterface;
 
   // Using this allows is to quickly switch between express and fastify and others
