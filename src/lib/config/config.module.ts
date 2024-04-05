@@ -9,12 +9,14 @@ import {
   appConfigValidationSchema,
   throttle,
   throttleConfigValidationSchema,
+  database,
+  databaseConfigValidationSchema,
 } from './configs';
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: `${process.cwd()}/.env`,
-      load: [app, redis, throttle],
+      load: [app, redis, throttle, database],
       cache: true,
       isGlobal: true,
       expandVariables: true,
@@ -22,6 +24,7 @@ import {
         ...appConfigValidationSchema,
         ...redisConfigValidationSchema,
         ...throttleConfigValidationSchema,
+        ...databaseConfigValidationSchema,
       }),
       validationOptions: {
         abortEarly: true,

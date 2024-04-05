@@ -1,5 +1,6 @@
 import type { Config as ConfigInterface } from '@lib/config/config.interface';
 import type { NextFunction, Request, Response } from 'express';
+import type { User as UserEntity } from '@entities';
 
 export {};
 
@@ -12,6 +13,8 @@ declare global {
       i18nLang?: string;
       ips: string[];
     }
+
+    interface User extends UserEntity {}
   }
 
   export type Configs = ConfigInterface;
