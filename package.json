@@ -76,6 +76,8 @@
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
+    "@side/jest-runtime": "^1.1.0",
+    "@swc/jest": "^0.2.36",
     "@types/compression": "^1.7.5",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.2",
@@ -104,15 +106,25 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
+    "testTimeout": 30000,
+    "moduleNameMapper": {
+      "^@entities": "<rootDir>/entities/index",
+      "^@mocks": "<rootDir>/_mocks_/index",
+      "^@common/(.*)$": "<rootDir>/common/$1",
+      "^@modules/(.*)$": "<rootDir>/modules/$1",
+      "^@lib/(.*)$": "<rootDir>/lib/$1"
     },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
+    "rootDir": "src",
+    "testRegex": ".spec.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "@swc/jest"
+    },
+    "runtime": "@side/jest-runtime",
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "coverageReporters": [
+      "text",
+      "html"
+    ]
   }
 }
