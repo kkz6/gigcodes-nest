@@ -4,6 +4,13 @@
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
-    "^.+\\.(t|j)s$": "ts-jest"
+    "^.+\\.(t|j)s$": "@swc/jest"
+  },
+  "runtime": "@side/jest-runtime",
+  "moduleNameMapper": {
+    "^@entities": "<rootDir>/../src/entities/index",
+    "^@common/(.*)$": "<rootDir>/../src/common/$1",
+    "^@modules/(.*)$": "<rootDir>/../src/modules/$1",
+    "^@lib/(.*)$": "<rootDir>/../src/lib/$1"
   }
 }

@@ -3,31 +3,15 @@ import {
   BeforeCreate,
   BeforeUpdate,
   BeforeUpsert,
-  Collection,
-  Embeddable,
-  Embedded,
   Entity,
   Enum,
   EventArgs,
-  ManyToMany,
   Property,
   wrap,
 } from '@mikro-orm/mysql';
 import { Roles } from '@common/@types';
 import { BaseEntity } from '@common/database';
 import { HelperService } from '@common/helpers';
-
-@Embeddable()
-export class Social {
-  @Property()
-  twitter?: string;
-
-  @Property()
-  facebook?: string;
-
-  @Property()
-  linkedin?: string;
-}
 
 @Entity()
 export class User extends BaseEntity {
@@ -69,23 +53,6 @@ export class User extends BaseEntity {
 
   @Property()
   isVerified? = false;
-
-  @Embedded(() => Social, { object: true, nullable: true })
-  social?: Social;
-
-  @ManyToMany({
-    entity: () => User,
-    inversedBy: (u) => u.followed,
-    owner: true,
-    pivotTable: 'user_to_follower',
-    joinColumn: 'follower',
-    inverseJoinColumn: 'following',
-    hidden: true,
-  })
-  followers = new Collection<User>(this);
-
-  @ManyToMany(() => User, (u) => u.followers)
-  followed = new Collection<User>(this);
 
   @Property()
   lastLogin? = new Date();

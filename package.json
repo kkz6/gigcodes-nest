@@ -2,7 +2,7 @@
   "name": "gigcodes-nest",
   "version": "0.0.1",
   "description": "",
-  "author": "Karthick K<karthick@gigcodes.com>",
+  "author": "Karthick K <karthick@gigcodes.com>",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -12,8 +12,10 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    "start:repl": "MIKRO_ORM_ALLOW_GLOBAL_CONTEXT=true nest start --watch --entryFile repl",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
+    "orm": "npx mikro-orm",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
@@ -31,7 +33,6 @@
     "@mikro-orm/mysql": "^6.1.12",
     "@mikro-orm/nestjs": "^5.2.3",
     "@mikro-orm/reflection": "^6.1.12",
-    "@mikro-orm/seeder": "^6.1.12",
     "@mikro-orm/sql-highlighter": "^1.0.1",
     "@nestjs/cache-manager": "^2.2.2",
     "@nestjs/common": "^10.0.0",
@@ -73,11 +74,15 @@
     "@commitlint/cli": "^19.2.1",
     "@commitlint/config-conventional": "^19.1.0",
     "@golevelup/ts-jest": "^0.4.0",
+    "@mikro-orm/cli": "^6.1.12",
+    "@mikro-orm/seeder": "^6.1.12",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
     "@side/jest-runtime": "^1.1.0",
     "@swc/jest": "^0.2.36",
+    "@types/cache-manager": "^4.0.6",
+    "@types/cache-manager-redis-store": "^2.0.4",
     "@types/compression": "^1.7.5",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.2",
@@ -125,6 +130,13 @@
     "coverageReporters": [
       "text",
       "html"
+    ]
+  },
+  "mikro-orm": {
+    "useTsNode": true,
+    "configPaths": [
+      "./src/common/database/mikro-orm-cli.config.ts",
+      "./dist/common/database/mikro-orm-cli.config.js"
     ]
   }
 }

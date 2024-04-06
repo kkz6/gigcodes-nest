@@ -19,12 +19,12 @@ import { baseOptions } from './orm.config';
 const logger = new Logger('MikroORM');
 
 const environment = environmentConfig({
-  path: `${process.cwd()}/env/.env.${process.env.NODE_ENV}`,
+  path: `${process.cwd()}/.env`,
 });
 
 dotEnvExpand.expand(environment);
 
-logger.log(`🛠️ Using env ${process.cwd()}/env/.env.${process.env.NODE_ENV}\n`);
+logger.log(`🛠️ Using env ${process.cwd()}/.env\n`);
 
 const config: Options = defineConfig({
   ...baseOptions,
