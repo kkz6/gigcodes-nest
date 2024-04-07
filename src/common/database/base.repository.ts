@@ -63,7 +63,6 @@ export class BaseRepository<T extends BaseEntity> extends EntityRepository<T> {
    */
   softRemove(entity: T): EntityManager {
     entity.deletedAt = new Date();
-    entity.isDeleted = true;
     this.em.persist(entity);
 
     return this.em;
@@ -76,7 +75,6 @@ export class BaseRepository<T extends BaseEntity> extends EntityRepository<T> {
    */
   softRemoveAndFlush(entity: T): Observable<T> {
     entity.deletedAt = new Date();
-    entity.isDeleted = true;
 
     return from(this.em.persistAndFlush(entity)).pipe(map(() => entity));
   }

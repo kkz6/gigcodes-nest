@@ -12,7 +12,7 @@
 
     /* ModuleResolution: */
 
-    "module": "CommonJS",
+    "module": "commonjs",
     "moduleResolution": "node",
 
     /* Output: */

@@ -18,14 +18,7 @@ describe('baseRepository', () => {
 
   it('should softremove and flush', async () => {
     userRepo.softRemoveAndFlush(loggedInUser).subscribe((result) => {
-      expect(result.isDeleted).toEqual(true);
       expect(result.deletedAt).toBeInstanceOf(Date);
     });
-  });
-
-  it('should softremove', () => {
-    userRepo.softRemove(loggedInUser);
-
-    expect(loggedInUser.isDeleted).toEqual(true);
   });
 });
