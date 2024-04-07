@@ -4,7 +4,7 @@ export class {className} extends Migration {
   knex = this.getKnex();
 
   async up(): Promise<void> {
-    await this.knex.schema.createTable('{tableName}', function (table) {
+    return this.knex.schema.createTable('{tableName}', function (table) {
       table.increments('id');
       table.uuid('idx');
 
@@ -17,6 +17,6 @@ export class {className} extends Migration {
   }
 
   async down(): Promise<void> {
-    await this.knex.schema.dropTableIfExists('{tableName}');
+    return this.knex.schema.dropTableIfExists('{tableName}');
   }
 }
