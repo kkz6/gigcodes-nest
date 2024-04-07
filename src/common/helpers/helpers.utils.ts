@@ -7,6 +7,9 @@ import { format, zonedTimeToUtc } from 'date-fns-tz';
 import type { Observable } from 'rxjs';
 import { from } from 'rxjs';
 import { REDIS_URI_REGEX } from '@common/constant';
+import type { User } from '@entities';
+import type { AuthenticationResponse } from '@common/@types';
+import { pick } from 'helper-fns';
 
 const argon2Options: ArgonOptions & { raw?: false } = {
   type: argon2id,
@@ -15,6 +18,20 @@ const argon2Options: ArgonOptions & { raw?: false } = {
 };
 
 export const HelperService = {
+  buildPayloadResponse(
+    user: User,
+    accessToken: string,
+    refreshToken?: string,
+  ): AuthenticationResponse {
+    return {
+      user: {
+        ...pick(user, ['id', 'idx']),
+      },
+      accessToken,
+      ...(refreshToken ? { refresh_token: refreshToken } : {}),
+    };
+  },
+
   isDev(): boolean {
     return process.env.NODE_ENV.startsWith('dev');
   },
@@ -29,7 +46,7 @@ export const HelperService = {
   /* The `getAppRootDir()` function is used to determine the root directory of the application. It starts
 by setting the `currentDirectory` variable to the value of `__dirname`, which represents the current
 directory of the module. */
-  getAppRootDir() {
+  getAppDir() {
     let currentDirectory = __dirname;
 
     while (!existsSync(join(currentDirectory, 'resources')))
