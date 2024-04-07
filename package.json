@@ -2,7 +2,11 @@
   "name": "gigcodes-nest",
   "version": "0.0.1",
   "description": "",
-  "author": "Karthick K <karthick@gigcodes.com>",
+  "author": {
+    "email": "karthick@gigcodes.com",
+    "name": "Karthick K",
+    "url": "https://devkarti.com"
+  },
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
