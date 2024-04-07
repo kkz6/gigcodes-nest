@@ -20,7 +20,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json --runInBand --forceExit",
-    "prepare": "is-ci || husky"
+    "prepare": "is-ci || husky",
+    "migration:create": "npx mikro-orm migration:create --name=$npm_config_name"
   },
   "engines": {
     "node": ">=20.12.0"
