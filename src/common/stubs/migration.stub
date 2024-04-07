@@ -1,0 +1,22 @@
+import { Migration } from '@mikro-orm/migrations';
+
+export class {className} extends Migration {
+  knex = this.getKnex();
+
+  async up(): Promise<void> {
+    await this.knex.schema.createTable('{tableName}', function (table) {
+      table.increments('id');
+      table.uuid('idx');
+
+      //@todo Add your custom columns here
+
+      table.timestamp('createdAt');
+      table.timestamp('updatedAt');
+      table.timestamp('deletedAt').nullable();
+    });
+  }
+
+  async down(): Promise<void> {
+    await this.knex.schema.dropTableIfExists('{tableName}');
+  }
+}

@@ -31,10 +31,10 @@ export class User extends BaseEntity {
   email!: string;
 
   @Property({ columnType: 'text' })
-  bio!: string;
+  bio?: string;
 
   @Property({ columnType: 'text' })
-  avatar!: string;
+  avatar?: string;
 
   @Property({ hidden: true, columnType: 'text', lazy: true })
   password!: string;
