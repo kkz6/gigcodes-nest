@@ -20,7 +20,7 @@ import {
   imports: [
     ConfigModule.forRoot({
       envFilePath: `${process.cwd()}/.env`,
-      load: [app, redis, throttle, database, mail,file],
+      load: [app, redis, throttle, database, mail, file],
       cache: true,
       isGlobal: true,
       expandVariables: true,
