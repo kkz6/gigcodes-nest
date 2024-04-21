@@ -1,7 +1,8 @@
-import { NestCaslModule } from './../../lib/casl/casl.module';
 import {
   NestCacheModule,
+  NestCaslModule,
   NestConfigModule,
+  NestFileModule,
   NestI18nModule,
   NestJwtModule,
   NestPinoModule,
@@ -18,6 +19,7 @@ import { Module } from '@nestjs/common';
     NestPinoModule,
     NestCaslModule,
     NestJwtModule,
+    NestFileModule,
   ],
   providers: [],
 })
