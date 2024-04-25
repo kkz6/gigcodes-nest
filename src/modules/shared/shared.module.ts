@@ -1,4 +1,3 @@
-import { NestCaslModule } from './../../lib/casl/casl.module';
 import {
   NestCacheModule,
   NestConfigModule,
@@ -6,6 +5,7 @@ import {
   NestJwtModule,
   NestPinoModule,
   NestThrottlerModule,
+  NestCaslModule,
 } from '@lib/index';
 import { Module } from '@nestjs/common';
 
