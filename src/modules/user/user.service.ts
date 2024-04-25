@@ -4,7 +4,7 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { slugify } from 'helper-fns';
 import type { Observable } from 'rxjs';
 import { from, map, mergeMap, of, switchMap, tap, throwError } from 'rxjs';
-import type { PaginationResponse, RecordWithFile } from '@common/@types';
+import type { File, PaginationResponse, RecordWithFile } from '@common/@types';
 import { createId } from '@paralleldrive/cuid2';
 import { CursorType, MailPayload, QueryOrder } from '@common/@types';
 import { BaseRepository } from '@common/database';
@@ -13,6 +13,7 @@ import { User } from '@entities';
 import { itemDoesNotExistKey, translate } from '@lib/i18n';
 import { MailerService } from '@lib/mailer/mailer.service';
 import type { CreateUserDto, EditUserDto } from './dtos';
+import { FileService } from '@lib/file';
 
 @Injectable()
 export class UserService {
@@ -23,6 +24,7 @@ export class UserService {
     private userRepository: BaseRepository<User>,
     private readonly em: EntityManager,
     private readonly mailService: MailerService,
+    private readonly fileService: FileService,
   ) {}
 
   sendMail(payload: MailPayload) {
@@ -105,29 +107,12 @@ export class UserService {
 
     return from(
       this.em.transactional(async (em) => {
-        //@todo add funcation to upload file here
-
         // cloudinary gives a url key on response that is the full url to file
 
         // user.avatar = response.url as string;
 
         await em.persistAndFlush(user);
-        // const link = this.configService.get('app.clientUrl', { infer: true });
-
-        // await this.amqpConnection.publish(
-        //   this.configService.get('rabbitmq.exchange', { infer: true }),
-        //   RoutingKey.SEND_MAIL,
-        //   {
-        //     template: EmailTemplate.WELCOME_TEMPLATE,
-        //     replacements: {
-        //       firstName: capitalize(user.firstName),
-        //       link,
-        //     },
-        //     to: user.email,
-        //     subject: EmailSubject.WELCOME,
-        //     from: this.configService.get('mail.senderEmail', { infer: true }),
-        //   },
-        // );
+        //@todo added mail service if you want to sent welcome emails here
       }),
     ).pipe(map(() => user));
   }
@@ -142,31 +127,30 @@ export class UserService {
    * @param image - IFile
    * @returns Observable<User>
    */
-  update(_index: string, _dto: EditUserDto, _image?: File) {
-    // let uploadImage$: Observable<string>;
-    // return this.findOne(index).pipe(
-    //   switchMap((user) => {
-    //     if (image) {
-    //       uploadImage$ = from(this.cloudinaryService.uploadFile(image)).pipe(
-    //         switchMap(({ url }) => {
-    //           const stringUrl = url as string;
-    //           return of(stringUrl);
-    //         }),
-    //       );
-    //     }
-    //     this.userRepository.assign(user, dto);
-    //     return uploadImage$.pipe(
-    //       switchMap((url) => {
-    //         if (url) user.avatar = url;
-    //         return from(this.em.flush()).pipe(
-    //           switchMap(() => {
-    //             return of(user);
-    //           }),
-    //         );
-    //       }),
-    //     );
-    //   }),
-    // );
+  update(index: string, dto: EditUserDto, image?: File) {
+    let uploadImage$: Observable<string>;
+    return this.findOne(index).pipe(
+      switchMap((user) => {
+        if (image) {
+          uploadImage$ = from(this.fileService.uploadImage(image)).pipe(
+            switchMap((url) => {
+              return of(url);
+            }),
+          );
+        }
+        this.userRepository.assign(user, dto);
+        return uploadImage$.pipe(
+          switchMap((url) => {
+            if (url) user.avatar = url;
+            return from(this.em.flush()).pipe(
+              switchMap(() => {
+                return of(user);
+              }),
+            );
+          }),
+        );
+      }),
+    );
   }
 
   /**

@@ -7,7 +7,6 @@ import {
   NestJwtModule,
   NestPinoModule,
   NestThrottlerModule,
-  NestCaslModule,
 } from '@lib/index';
 import { Module } from '@nestjs/common';
 

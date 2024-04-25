@@ -25,10 +25,10 @@ export class FileService {
         infer: true,
       }),
       credentials: {
-        secretAccessKey: this.configService.get<string>('file.awsS3Region', {
+        secretAccessKey: this.configService.get<string>('file.accessKeyId', {
           infer: true,
         }),
-        accessKeyId: this.configService.get<string>('file.awsS3Region', {
+        accessKeyId: this.configService.get<string>('file.secretAccessKey', {
           infer: true,
         }),
       },
