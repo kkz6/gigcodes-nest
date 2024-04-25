@@ -6,7 +6,7 @@ import type { Reflector } from '@nestjs/core';
 import type { JwtService } from '@nestjs/jwt';
 import { of } from 'rxjs';
 import type { CacheService } from '@lib/cache/cache.service';
-import { RefreshToken, User } from '@entities';
+import { OtpLog, RefreshToken, User } from '@entities';
 import type { CursorPaginationDto } from '@common/dtos';
 import type { BaseRepository } from '@common/database';
 import { PaginationType } from '@common/@types';
@@ -14,6 +14,8 @@ import { Buffer } from 'node:buffer';
 import path from 'node:path';
 import type { File } from '@common/@types';
 import { RefreshTokensRepository } from '@modules/token/refresh-tokens.repository';
+import { MailerService } from '@lib/mailer/mailer.service';
+import { TokensService } from '@modules/token/tokens.service';
 
 export const mockedUser = {
   idx: 'idx',
@@ -27,6 +29,19 @@ export const mockedUser = {
   twoFactorSecret: 'someSecret',
   mobileNumber: '0123456789',
   isTwoFactorEnabled: true,
+};
+
+export const mockedOtpLog = {
+  id: 1,
+  expiresIn: new Date(),
+  otpCode: '12344',
+  isUsed: false,
+};
+
+export const mockResetPasswordDto = {
+  password: 'Password@1234',
+  confirmPassword: 'Password@1234',
+  otpCode: '123456',
 };
 
 export const mockedProtocol = {
@@ -88,6 +103,7 @@ export const refreshToken = new RefreshToken({
   isRevoked: false,
 });
 
+export const mockMailService = createMock<MailerService>();
 export const mockResponse = createMock<NestifyResponse>();
 export const mockCacheService = createMock<CacheService>();
 export const mockConfigService = createMock<ConfigService>();
@@ -97,6 +113,8 @@ export const mockContext = createMock<ExecutionContext>({});
 export const mockReflector = createMock<Reflector>();
 export const mockRefreshRepo = createMock<BaseRepository<RefreshToken>>();
 export const mockRefreshTokenRepo = createMock<RefreshTokensRepository>();
+export const mockTokenService = createMock<TokensService>();
+export const mockOtpLogRepo = createMock<BaseRepository<OtpLog>>();
 
 export const mockNext = createMock<CallHandler>({
   handle: jest.fn(() => of({})),
@@ -112,6 +130,13 @@ mockUserRepo.softRemoveAndFlush.mockImplementation((entity) => {
 
   return of(entity);
 });
+
+mockOtpLogRepo.findOne.mockImplementation((options) =>
+  Promise.resolve({
+    user: mockedUser,
+    idx: options.idx,
+  }),
+);
 
 // mockUserRepo.findOne.mockImplementation((options: FilterQuery<User>) => {
 //   if ('idx' in options) {

@@ -1,3 +1,9 @@
+import { IsUniqueConstraint } from '@common/decorators';
+import { CustomThrottlerGuard } from '@common/guards';
+import {
+  ClearCacheInterceptor,
+  HttpCacheInterceptor,
+} from '@common/interceptors';
 import {
   NestCacheModule,
   NestCaslModule,
@@ -7,11 +13,19 @@ import {
   NestJwtModule,
   NestPinoModule,
   NestThrottlerModule,
+  NestMailModule,
+  OrmModule,
 } from '@lib/index';
+import { AuthModule } from '@modules/auth/auth.module';
+import { UserModule } from '@modules/user/user.module';
 import { Module } from '@nestjs/common';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [
+    AuthModule,
+    UserModule,
+    OrmModule,
     NestConfigModule,
     NestI18nModule,
     NestCacheModule,
@@ -20,7 +34,22 @@ import { Module } from '@nestjs/common';
     NestCaslModule,
     NestJwtModule,
     NestFileModule,
+    NestMailModule,
   ],
-  providers: [],
+  providers: [
+    IsUniqueConstraint,
+    {
+      provide: APP_GUARD,
+      useClass: CustomThrottlerGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: HttpCacheInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClearCacheInterceptor,
+    },
+  ],
 })
 export class SharedModule {}

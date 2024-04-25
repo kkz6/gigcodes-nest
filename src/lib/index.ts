@@ -7,3 +7,4 @@ export * from './orm.module';
 export * from './casl';
 export * from './jwt.module';
 export * from './file';
+export * from './mailer';
