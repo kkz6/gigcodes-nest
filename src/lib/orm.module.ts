@@ -13,7 +13,7 @@ import { baseOptions } from '@common/database/orm.config';
       useFactory: (configService: ConfigService<Configs, true>) =>
         defineConfig({
           ...baseOptions,
-          host: configService.get<string>('database.host', { infer: true }),
+          host: configService.get<number>('database.host', { infer: true }),
           port: configService.get<number>('database.port', { infer: true }),
           dbName: configService.get<string>('database.dbName', { infer: true }),
           user: configService.get<string>('database.user', { infer: true }),
