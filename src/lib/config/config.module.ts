@@ -13,12 +13,14 @@ import {
   databaseConfigValidationSchema,
   mail,
   mailConfigValidationSchema,
+  file,
+  fileConfigValidationSchema,
 } from './configs';
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: `${process.cwd()}/.env`,
-      load: [app, redis, throttle, database, mail],
+      load: [app, redis, throttle, database, mail, file],
       cache: true,
       isGlobal: true,
       expandVariables: true,
@@ -28,6 +30,7 @@ import {
         ...throttleConfigValidationSchema,
         ...databaseConfigValidationSchema,
         ...mailConfigValidationSchema,
+        ...fileConfigValidationSchema,
       }),
       validationOptions: {
         abortEarly: true,

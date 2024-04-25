@@ -6,3 +6,4 @@ export * from './throttle.module';
 export * from './orm.module';
 export * from './casl';
 export * from './jwt.module';
+export * from './file';
