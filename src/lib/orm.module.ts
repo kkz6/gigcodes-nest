@@ -3,6 +3,7 @@ import { defineConfig } from '@mikro-orm/mysql';
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { baseOptions } from '@common/database/orm.config';
+import * as entities from '@entities';
 
 @Global()
 @Module({
@@ -23,7 +24,7 @@ import { baseOptions } from '@common/database/orm.config';
         }),
     }),
     MikroOrmModule.forFeature({
-      entities: baseOptions.entities,
+      entities: Object.keys(entities),
     }),
   ],
   exports: [MikroOrmModule],

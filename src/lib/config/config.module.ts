@@ -3,24 +3,26 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import Joi from 'joi';
 import {
-  redis,
-  redisConfigValidationSchema,
   app,
   appConfigValidationSchema,
-  throttle,
-  throttleConfigValidationSchema,
   database,
   databaseConfigValidationSchema,
-  mail,
-  mailConfigValidationSchema,
   file,
   fileConfigValidationSchema,
+  jwt,
+  mail,
+  mailConfigValidationSchema,
+  redis,
+  redisConfigValidationSchema,
+  throttle,
+  throttleConfigValidationSchema,
 } from './configs';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: `${process.cwd()}/.env`,
-      load: [app, redis, throttle, database, mail, file],
+      load: [app, redis, throttle, database, mail, file, jwt],
       cache: true,
       isGlobal: true,
       expandVariables: true,

@@ -11,19 +11,21 @@ import {
   NestFileModule,
   NestI18nModule,
   NestJwtModule,
+  NestMailModule,
   NestPinoModule,
   NestThrottlerModule,
-  NestMailModule,
   OrmModule,
 } from '@lib/index';
-// import { AuthModule } from '@modules/auth/auth.module';
 import { Module } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { UserModule } from '@modules/user/user.module';
+import { AuthModule } from '@modules/auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
+    UserModule,
     OrmModule,
-    // AuthModule,
     NestConfigModule,
     NestI18nModule,
     NestCacheModule,
