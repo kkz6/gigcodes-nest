@@ -1,4 +1,12 @@
-import { Body, Delete, Get, Post, Query, UploadedFile } from '@nestjs/common';
+import {
+  Body,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Query,
+  UploadedFile,
+} from '@nestjs/common';
 import { Observable } from 'rxjs';
 import type { PaginationResponse } from '@common/@types';
 import { Action, File, Roles } from '@common/@types';
@@ -15,7 +23,7 @@ import { fileValidatorPipe } from '@common/misc';
 import { User } from '@entities';
 import { CheckPolicies, GenericPolicyHandler } from '@lib/casl';
 import { UserService } from './user.service';
-import { CreateUserDto, UserRegistrationDto } from './dtos';
+import { CreateUserDto, EditUserDto, UserRegistrationDto } from './dtos';
 
 @GenericController('users')
 export class UserController {
@@ -73,22 +81,21 @@ export class UserController {
     return this.userService.create({ ...dto, files: image });
   }
 
-  //@todo update the user edit funcationality to include image upload
-  // @Put(':idx')
-  // @SwaggerResponse({
-  //   operation: 'User edit',
-  //   badRequest: 'User already registered with email.',
-  //   notFound: 'User does not exist.',
-  //   params: ['idx'],
-  // })
-  // @CheckPolicies(new GenericPolicyHandler(User, Action.Update))
-  // update(
-  //   @UUIDParam('idx') index: string,
-  //   @Body() dto: EditUserDto,
-  //   @UploadedFile(fileValidatorPipe({ required: false })) image?: File,
-  // ) {
-  //   return this.userService.update(index, dto, image);
-  // }
+  @Put(':idx')
+  @SwaggerResponse({
+    operation: 'User edit',
+    badRequest: 'User already registered with email.',
+    notFound: 'User does not exist.',
+    params: ['idx'],
+  })
+  @CheckPolicies(new GenericPolicyHandler(User, Action.Update))
+  update(
+    @UUIDParam('idx') index: string,
+    @Body() dto: EditUserDto,
+    @UploadedFile(fileValidatorPipe({ required: false })) image?: File,
+  ) {
+    return this.userService.update(index, dto, image);
+  }
 
   @Delete(':idx')
   @SwaggerResponse({
