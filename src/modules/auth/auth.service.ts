@@ -1,7 +1,6 @@
-import process from 'node:process';
 import type { FilterQuery } from '@mikro-orm/mysql';
-import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/mysql';
+import { InjectRepository } from '@mikro-orm/nestjs';
 import {
   BadRequestException,
   ForbiddenException,
@@ -14,9 +13,9 @@ import { init } from '@paralleldrive/cuid2';
 import { isAfter } from 'date-fns';
 import { capitalize, omit } from 'helper-fns';
 import type { Observable } from 'rxjs';
-import { from, map, mergeMap, of, switchMap, throwError, zip } from 'rxjs';
+import { from, map, mergeMap, switchMap, throwError, zip } from 'rxjs';
 
-import type { AuthenticationResponse, OauthResponse } from '@common/@types';
+import type { AuthenticationResponse } from '@common/@types';
 import { EmailSubject, EmailTemplate } from '@common/@types';
 import { BaseRepository } from '@common/database';
 import { HelperService } from '@common/helpers';
@@ -49,18 +48,13 @@ export class AuthService {
 
   /**
    * It takes an email and a password, and returns the user if the password is correct
-   * @param  isPasswordLogin - boolean - This is a boolean value that determines whether the
    * @param email - The email address of the user.
    * @param  pass - string - The password to be validated
    * user is logging in with a password or not.
    * @returns The user object without the password property.
    */
 
-  validateUser(
-    isPasswordLogin: boolean,
-    email: string,
-    pass?: string,
-  ): Observable<any> {
+  validateUser(email: string, pass?: string): Observable<any> {
     return from(
       this.userRepository.findOne({
         email,
@@ -84,20 +78,18 @@ export class AuthService {
           );
         }
 
-        return user && isPasswordLogin
-          ? HelperService.verifyHash(user.password, pass!).pipe(
-              map((isValid) => {
-                if (isValid) return omit(user, ['password']);
+        return HelperService.verifyHash(user.password, pass!).pipe(
+          map((isValid) => {
+            if (isValid) return omit(user, ['password']);
 
-                return throwError(
-                  () =>
-                    new BadRequestException(
-                      translate('exception.invalidCredentials'),
-                    ),
-                );
-              }),
-            )
-          : of(omit(user, ['password']));
+            return throwError(
+              () =>
+                new BadRequestException(
+                  translate('exception.invalidCredentials'),
+                ),
+            );
+          }),
+        );
       }),
     );
   }
@@ -105,20 +97,12 @@ export class AuthService {
   /**
    * We validate the user, if the user is valid, we generate an access token and a refresh token
    * @param loginDto - UserLoginDto - This is the DTO that we created earlier.
-   * @param isPasswordLogin - boolean - This is a boolean value that tells the function whether
    * the user is logging in with a password or oauth
    * @returns An observable of type IAuthenticationResponse
    */
 
-  login(
-    loginDto: UserLoginDto,
-    isPasswordLogin = false,
-  ): Observable<AuthenticationResponse> {
-    return this.validateUser(
-      isPasswordLogin,
-      loginDto.email,
-      loginDto.password,
-    ).pipe(
+  login(loginDto: UserLoginDto): Observable<AuthenticationResponse> {
+    return this.validateUser(loginDto.email, loginDto.password).pipe(
       switchMap((user: User) => {
         if (!user) {
           return throwError(
@@ -417,27 +401,5 @@ export class AuthService {
 
     if (!user) throw new UnauthorizedException();
     return user;
-  }
-
-  /**
-   * The `OauthHandler` function handles the OAuth login process and redirects the user to the client URL
-   * with the access token.
-   * @returns a redirect response to a client URL with an access token as a query parameter.
-   */
-  OauthHandler({
-    response,
-    user,
-  }: {
-    response: NestifyResponse;
-    user: OauthResponse;
-  }) {
-    return this.login({ email: user.email }, false).pipe(
-      map((data) => {
-        // client url
-        return response.redirect(
-          `${process.env.API_URL}/${process.env.APP_PORT}/v1/auth/oauth/login?token=${data.accessToken}`,
-        );
-      }),
-    );
   }
 }

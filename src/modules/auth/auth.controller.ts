@@ -1,29 +1,23 @@
 import {
   Body,
   DefaultValuePipe,
-  Get,
   ParseBoolPipe,
   Post,
   Put,
   Query,
-  Req,
-  Res,
-  UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation } from '@nestjs/swagger';
-import { Observable, map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 import { TokensService } from '@modules/token/tokens.service';
-import { User } from '@entities';
 import type { OtpLog } from '@entities';
+import { User } from '@entities';
 import {
   Auth,
   GenericController,
   LoggedInUser,
   SwaggerResponse,
 } from '@common/decorators';
-import { OauthResponse } from '@common/@types';
 import type { AuthenticationResponse } from '@common/@types';
 import { AuthService } from './auth.service';
 import {
@@ -47,6 +41,7 @@ export class AuthController {
   login(@Body() loginDto: UserLoginDto): Observable<AuthenticationResponse> {
     return this.authService.login(loginDto);
   }
+
   @Post('reset-password')
   @SwaggerResponse({
     operation: 'Reset password',
@@ -65,28 +60,6 @@ export class AuthController {
   })
   forgotPassword(@Body() dto: SendOtpDto): Observable<OtpLog> {
     return this.authService.forgotPassword(dto);
-  }
-
-  @Get('google')
-  @UseGuards(AuthGuard('google'))
-  googleAuth(@Req() _request: Request) {
-    // the google auth redirect will be handled by passport
-  }
-
-  @Get('google/callback')
-  @UseGuards(AuthGuard('google'))
-  googleAuthRedirect(
-    @LoggedInUser()
-    user: OauthResponse,
-    @Res() response: NestifyResponse,
-  ) {
-    return this.authService.OauthHandler({ response, user });
-  }
-
-  // this simulates a frontend url for testing oauth login
-  @Get('oauth/login')
-  oauthMock(@Query() query: { token: string }) {
-    return { message: 'successfully logged', token: query.token };
   }
 
   @Post('verify-otp')

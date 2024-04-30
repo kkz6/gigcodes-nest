@@ -35,6 +35,10 @@ import { AuthModule } from '@modules/auth/auth.module';
     NestJwtModule,
     NestFileModule,
     NestMailModule,
+    // GraphQLModule.forRoot<ApolloDriverConfig>({
+    //   driver: ApolloDriver,
+    //   autoSchemaFile: 'schema.gql',
+    // }),
   ],
   providers: [
     IsUniqueConstraint,
