@@ -1,4 +1,4 @@
-import { UseInterceptors, applyDecorators } from '@nestjs/common';
+import { applyDecorators, UseInterceptors } from '@nestjs/common';
 import {
   FileFieldsInterceptor,
   FileInterceptor,
@@ -8,11 +8,6 @@ import type {
   MulterField,
   MulterOptions,
 } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
-import { ApiBody, ApiConsumes } from '@nestjs/swagger';
-import type {
-  ReferenceObject,
-  SchemaObject,
-} from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 
 interface ApiFileOptions {
   fieldName?: string;
@@ -39,19 +34,6 @@ export function ApiFile(options_?: ApiFileOptions) {
 
   return applyDecorators(
     UseInterceptors(FileInterceptor(options.fieldName, options.localOptions)),
-    ApiConsumes('multipart/form-data'),
-    ApiBody({
-      schema: {
-        type: 'object',
-        required: options.required ? [options.fieldName] : [],
-        properties: {
-          [options.fieldName]: {
-            type: 'string',
-            format: 'binary',
-          },
-        },
-      },
-    }),
   );
 }
 
@@ -77,22 +59,6 @@ export function ApiFiles(options_?: ApiFilesOptions) {
         options.localOptions,
       ),
     ),
-    ApiConsumes('multipart/form-data'),
-    ApiBody({
-      schema: {
-        type: 'object',
-        required: options.required ? [options.fieldName] : [],
-        properties: {
-          [options.fieldName]: {
-            type: 'array',
-            items: {
-              type: 'string',
-              format: 'binary',
-            },
-          },
-        },
-      },
-    }),
   );
 }
 
@@ -108,22 +74,7 @@ export function ApiFileFields(
   options: (MulterField & { required?: boolean })[],
   localOptions?: MulterOptions,
 ) {
-  const bodyProperties = Object.assign(
-    {},
-    ...options.map((field) => {
-      return { [field.name]: { type: 'string', format: 'binary' } };
-    }),
-  ) as Record<string, SchemaObject | ReferenceObject>;
-
   return applyDecorators(
     UseInterceptors(FileFieldsInterceptor(options, localOptions)),
-    ApiConsumes('multipart/form-data'),
-    ApiBody({
-      schema: {
-        type: 'object',
-        properties: bodyProperties,
-        required: options.filter((f) => f.required).map((f) => f.name),
-      },
-    }),
   );
 }

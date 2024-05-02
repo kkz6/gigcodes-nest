@@ -1,4 +1,3 @@
-import { PickType } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 import {
   IsEqualToField,
@@ -6,6 +5,7 @@ import {
   IsStringField,
 } from '@common/decorators';
 import { validationI18nMessage } from '@lib/i18n';
+import { PickType } from '@nestjs/graphql';
 
 export class ResetPasswordDto {
   /**

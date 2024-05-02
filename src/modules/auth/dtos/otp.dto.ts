@@ -1,5 +1,5 @@
-import { PickType } from '@nestjs/swagger';
 import { IsEmailField, IsStringField } from '@common/decorators';
+import { PickType } from '@nestjs/graphql';
 
 export class OtpVerifyDto {
   /**
