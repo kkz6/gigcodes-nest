@@ -4,6 +4,7 @@ import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 import { Logger, NotFoundException } from '@nestjs/common';
 import { BaseRepository } from './base.repository';
 import { CustomMigrationGenerator } from './CustomMigrationGenerator';
+import { LaravelLikeNamingStrategy } from '@common/database/naming-strategy';
 
 const logger = new Logger('MikroORM');
 
@@ -47,4 +48,5 @@ export const baseOptions = {
   forceUtcTimezone: true,
   registerRequestContext: true,
   pool: { min: 2, max: 10 },
+  namingStrategy: LaravelLikeNamingStrategy,
 };

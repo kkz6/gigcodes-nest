@@ -47,7 +47,19 @@ async function bootstrap() {
 
   if (!HelperService.isProd()) {
     app.use(compression());
-    app.use(helmet());
+    app.use(
+      helmet({
+        contentSecurityPolicy: {
+          directives: {
+            defaultSrc: ["'self'"], // Default policy for loading content
+            scriptSrc: ["'self'", "https: 'unsafe-inline'"], // Allows scripts from the same origin and inline scripts
+            styleSrc: ["'self'", "https: 'unsafe-inline'"], // Allow styles from same origin and inline styles
+            imgSrc: ["'self'", 'data:', 'https:'], // Allow images from the same origin, data URLs, and HTTPS
+            connectSrc: ["'self'", 'https:'], // Allow connections to the same origin and over HTTPS
+          },
+        },
+      }),
+    );
     app.enableCors({
       credentials: true,
       methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],

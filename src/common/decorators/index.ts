@@ -13,3 +13,4 @@ export * from './swagger-api.decorator';
 export * from './user.decorator';
 export * from './uuid-param.decorator';
 export * from './validation';
+export * from './resolver.decorator';

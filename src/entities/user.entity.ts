@@ -11,12 +11,16 @@ import {
 import { Roles } from '@common/@types';
 import { BaseEntity } from '@common/database';
 import { HelperService } from '@common/helpers';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @Entity()
+@ObjectType()
 export class User extends BaseEntity {
+  @Field(() => Int)
   @Property()
   firstName!: string;
 
+  @Field({ nullable: true })
   @Property()
   middleName?: string;
 
