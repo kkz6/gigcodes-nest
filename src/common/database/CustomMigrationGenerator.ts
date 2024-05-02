@@ -17,11 +17,9 @@ export class CustomMigrationGenerator extends TSMigrationGenerator {
       'src/common/stubs/migration.stub',
       'utf-8',
     );
-    const content = stubContent
-      .replace(/\{className\}/g, formattedClassName)
-      .replace(/\{tableName\}/g, tableName);
-
-    return content;
+    return stubContent
+      .replace(/\{className}/g, formattedClassName)
+      .replace(/\{tableName}/g, tableName);
   }
 
   private formatClassNameForFile(className: string): string {

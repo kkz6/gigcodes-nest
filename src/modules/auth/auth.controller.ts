@@ -6,18 +6,12 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
 import { map, Observable } from 'rxjs';
 
 import { TokensService } from '@modules/token/tokens.service';
 import type { OtpLog } from '@entities';
 import { User } from '@entities';
-import {
-  Auth,
-  GenericController,
-  LoggedInUser,
-  SwaggerResponse,
-} from '@common/decorators';
+import { Auth, GenericController, LoggedInUser } from '@common/decorators';
 import type { AuthenticationResponse } from '@common/@types';
 import { AuthService } from './auth.service';
 import {
@@ -37,47 +31,28 @@ export class AuthController {
   ) {}
 
   @Post('login')
-  @ApiOperation({ summary: 'User Login' })
   login(@Body() loginDto: UserLoginDto): Observable<AuthenticationResponse> {
     return this.authService.login(loginDto);
   }
 
   @Post('reset-password')
-  @SwaggerResponse({
-    operation: 'Reset password',
-    notFound: "Otp doesn't exist.",
-    badRequest: 'Otp is expired.',
-  })
   resetUserPassword(@Body() dto: ResetPasswordDto): Observable<User> {
     return this.authService.resetPassword(dto);
   }
 
   @Auth()
   @Put('forgot-password')
-  @SwaggerResponse({
-    operation: 'Forgot password',
-    notFound: "Account doesn't exist.",
-  })
   forgotPassword(@Body() dto: SendOtpDto): Observable<OtpLog> {
     return this.authService.forgotPassword(dto);
   }
 
   @Post('verify-otp')
-  @SwaggerResponse({
-    operation: 'Verify otp',
-    notFound: "Otp doesn't exist.",
-    badRequest: 'Otp is expired.',
-  })
   verifyOtp(@Body() dto: OtpVerifyDto): Observable<User> {
     return this.authService.verifyOtp(dto);
   }
 
   @Auth()
   @Post('change-password')
-  @SwaggerResponse({
-    operation: 'Change password',
-    badRequest: 'Username and password provided does not match.',
-  })
   changePassword(
     @Body() dto: ChangePasswordDto,
     @LoggedInUser() user: User,
@@ -85,7 +60,6 @@ export class AuthController {
     return this.authService.changePassword(dto, user);
   }
 
-  @ApiOperation({ summary: 'Refresh token' })
   @Post('token/refresh')
   refresh(@Body() body: RefreshTokenDto): Observable<any> {
     return this.tokenService
@@ -94,7 +68,6 @@ export class AuthController {
   }
 
   @Auth()
-  @ApiOperation({ summary: 'Logout user' })
   @Post('logout')
   logout(
     @LoggedInUser() user: User,

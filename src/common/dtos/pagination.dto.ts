@@ -1,12 +1,15 @@
 import { IsBoolean, IsOptional } from 'class-validator';
 import { i18nValidationMessage } from 'nestjs-i18n';
 import { IsDateField, IsStringField, ToBoolean } from '@common/decorators';
+import { ArgsType, Field } from '@nestjs/graphql';
 
+@ArgsType()
 export abstract class PaginationDto {
   /**
    * From date filter
    */
 
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateField()
   from?: Date;
@@ -14,7 +17,7 @@ export abstract class PaginationDto {
   /**
    * From date filter
    */
-
+  @Field(() => Date, { nullable: true })
   @IsOptional()
   @IsDateField()
   to?: Date;
@@ -22,6 +25,7 @@ export abstract class PaginationDto {
   /**
    *  The search query
    */
+  @Field(() => String, { nullable: true })
   @IsStringField({ required: false, minLength: 1, maxLength: 100 })
   search?: string;
 
@@ -32,6 +36,7 @@ export abstract class PaginationDto {
    */
   @IsOptional()
   @ToBoolean()
+  @Field(() => Boolean, { nullable: true })
   @IsBoolean({
     message: i18nValidationMessage('validation.isDataType', {
       type: 'boolean',
@@ -44,6 +49,7 @@ export abstract class PaginationDto {
    * entities should be included in the query
    * results.
    */
+  @Field(() => [String], { nullable: true })
   @IsStringField({ required: false, each: true })
   relations: string[] = [];
 
@@ -52,6 +58,7 @@ export abstract class PaginationDto {
    * entities field should be included in the query
    * results.
    */
+  @Field(() => [String], { nullable: true })
   @IsStringField({ required: false, each: true })
   fields: string[] = [];
 }
